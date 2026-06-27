@@ -125,6 +125,10 @@ const Generator = {
     zip.file('assets/js/super.js',         SUPER_JS         || '');
     zip.file('assets/js/enterprise.js',    ENTERPRISE_JS    || '');
     zip.file('assets/js/crud.js',           CRUD_JS          || '');
+    /* Cumulative repair: every generated page references site-help.js, so it
+       must be physically shipped in the client ZIP. Missing this file breaks
+       the exhaustive school assistant on generated sites. */
+    zip.file('assets/js/site-help.js',      SITE_HELP_JS     || '');
 
     /* 5. assets/js/app.js — runtime (init, sign-in, role gating, dark mode, modals, …) */
     zip.file('assets/js/app.js', Generator.appJS(cfg));
@@ -184,6 +188,7 @@ const Generator = {
     zip.file('voting.html',        T.voting(cfg));
     zip.file('notifications.html', T.notifications(cfg));
     zip.file('about.html',         Generator.pageAbout(cfg));
+    zip.file('contact.html',       Generator.pageContact(cfg));
 
     /* ✨ v2 dedicated, fully-featured pages */
     zip.file('cbt.html',           Generator.pageCBT(cfg));          // teacher exam manager
@@ -437,7 +442,7 @@ console.log('%c[${window.SC.jsStr(cfg.schoolName)}] School Connect ready.', 'col
   appJS(cfg) {
     return `
 /* Pages that must NEVER force a redirect to login (public + the login page itself). */
-const PUBLIC_PAGES = ['login','index','about','contact','admissions','register','signup',''];
+const PUBLIC_PAGES = ['login','index','about','contact','apply','register','signup',''];
 
 function currentPage() {
   return (location.pathname.split('/').pop() || 'index.html').replace('.html','');
@@ -727,7 +732,7 @@ else App.init();
   /* Service worker (offline cache + push handler) */
   serviceWorker(cfg) {
     return `// School Connect Service Worker — offline + push
-const CACHE = 'sc-cache-v1';
+const CACHE = 'sc-cache-2026-06-27-r2';
 const CORE = ['./','./index.html','./login.html','./dashboard.html','./assets/css/style.css','./assets/js/config.js','./assets/js/app.js','./assets/js/notifications.js','./assets/js/voting.js','./assets/js/pwa-install.js','./assets/js/super.js','./assets/js/site-help.js','./assets/js/cbt-engine.js','./assets/js/analytics.js','./assets/js/enterprise.js','./assets/js/crud.js','./assets/img/logo.${cfg.logoExt}','./manifest.json'];
 
 self.addEventListener('install', e => {
@@ -795,7 +800,7 @@ ${urls}
     <p style="margin-top:12px;color:var(--gray-700);line-height:1.8">${T.esc(cfg.schoolName)} uses the <strong>School Connect</strong> platform by <a href="${T.esc(cfg.hmgLink)}" target="_blank" rel="noopener">HMG Concepts</a> to manage students, results, fees, attendance, CBT exams and parent communication — 100% free, mobile-friendly, and owned by us forever.</p>
     <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
       <a href="login.html" class="btn btn-primary">Sign in</a>
-      <a href="admissions.html" class="btn btn-outline">Apply for admission</a>
+      <a href="apply.html" class="btn btn-outline">Apply for admission</a>
       <a href="contact.html" class="btn btn-outline">Contact us</a>
     </div>
   </div>
@@ -807,13 +812,17 @@ ${urls}
 <script src="assets/js/config.js"></script>
 <script src="assets/js/notifications.js"></script>
 <script src="assets/js/pwa-install.js"></script>
+<script src="assets/js/site-help.js"></script>
 <script src="assets/js/super.js"></script>
 <script src="assets/js/enterprise.js"></script>
 <script src="assets/js/crud.js"></script>
+<script src="assets/js/app.js"></script>
 <script>
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').then(reg => Notifications.init(sb, reg));
-else Notifications.init(sb);
-PWAInstall.init();
+if (window.Notifications) {
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').then(reg => Notifications.init(sb, reg));
+  else Notifications.init(sb);
+}
+if (window.PWAInstall) PWAInstall.init();
 if (window.Super) Super.init(sb, window.SCHOOL);
 if (window.Enterprise) Enterprise.init(sb);
 if (window.CRUD) CRUD.init(sb);
@@ -910,13 +919,17 @@ if (window.CRUD) CRUD.init(sb);
 <script src="assets/js/config.js"></script>
 <script src="assets/js/notifications.js"></script>
 <script src="assets/js/pwa-install.js"></script>
+<script src="assets/js/site-help.js"></script>
 <script src="assets/js/super.js"></script>
 <script src="assets/js/enterprise.js"></script>
 <script src="assets/js/crud.js"></script>
+<script src="assets/js/app.js"></script>
 <script>
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').then(reg => Notifications.init(sb, reg));
-else Notifications.init(sb);
-PWAInstall.init();
+if (window.Notifications) {
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').then(reg => Notifications.init(sb, reg));
+  else Notifications.init(sb);
+}
+if (window.PWAInstall) PWAInstall.init();
 if (window.Super) Super.init(sb, window.SCHOOL);
 if (window.Enterprise) Enterprise.init(sb);
 if (window.CRUD) CRUD.init(sb);
@@ -1330,9 +1343,60 @@ const CBTUI = {
     \`, '<button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="CBTUI.save()">Create exam</button>');
   },
   promptGuide(){
-    const txt = 'SCHOOL CONNECT CBT PRO — STRUCTURED QUESTION-BANK PROMPT (NO RUNTIME AI API)\n\nROLE\nAct as a senior examiner, curriculum specialist, psychometric reviewer and classroom teacher. Produce a clean CSV question bank that can be pasted directly into School Connect CBT.\n\nASSESSMENT CONTEXT\nSchool: [SCHOOL NAME]\nSubject: [SUBJECT]\nClass/Level: [CLASS]\nTerm/Session: [TERM] [SESSION]\nTopic(s): [TOPICS]\nExam type: [Quiz / CA / Assignment / Project / Practical / Exam / Entrance]\nNumber of questions: [COUNT]\nDuration: [MINUTES]\nLearner standard: Nigerian curriculum plus international assessment best practice.\n\nOUTPUT FORMAT — CSV ONLY\nReturn CSV only. Do not add markdown, numbering, commentary, code fences, or explanations outside the CSV.\nUse this exact header:\nQuestion,A,B,C,D,CorrectAnswer,Explanation,Type,Tolerance,Unit,Accept,MRQ_AON,Pairs,Items,Difficulty,Tags,Section\n\nSUPPORTED TYPES\nmcq, truefalse, numeric, short, mrq, essay, matching, ordering, cloze, categorization, multinumeric, assertion_reason, case_study, image_mcq, matrix, hot_text, code\n\nQUALITY RULES\n1. Questions must be age-appropriate, unambiguous and syllabus-aligned.\n2. Mix cognitive levels: recall, understanding, application, analysis and problem-solving.\n3. Balance difficulty: 30% Easy, 50% Medium, 20% Hard.\n4. Avoid repeated questions, duplicated answers and trick wording.\n5. Every auto-gradable item must have a correct answer.\n6. Every item must include a concise Explanation for teacher review and student feedback.\n7. Use Tags for topic/subtopic and Section for paper section.\n\nTYPE RULES\n- mcq: options A-D; CorrectAnswer must be A/B/C/D.\n- truefalse: use A=True, B=False; CorrectAnswer A or B.\n- mrq: CorrectAnswer like A|C. If MRQ_AON is TRUE, award all-or-nothing; otherwise partial credit is allowed.\n- numeric: CorrectAnswer is a number; Tolerance may be 0.01 etc; Unit optional.\n- short: CorrectAnswer is preferred text; Accept can contain alternatives separated by |.\n- matching: put pairs in Pairs as left:right|left:right.\n- ordering: put correct sequence in Items as JSON array or pipe list.\n- cloze: use blanks like [blank1]; put answers in Items JSON.\n- categorization/matrix/hot_text/code/case_study: use Items JSON, valid and compact.\n- essay: CorrectAnswer may contain marking guide; not auto-graded.\n\nFINAL CHECK\nBefore returning, silently verify that the CSV has the exact header, all rows have the same number of columns, quotes are escaped properly, and no markdown is included.\n'
-    openModal('Structured CBT Question Prompt', '<textarea class="form-input" rows="18" style="font-family:monospace">'+esc(txt)+'</textarea><p style="color:var(--gray-600)">Copy this into any AI assistant manually, then paste the returned CSV into School Connect. The platform itself uses no AI API.</p>', '<button class="btn btn-outline" onclick="closeModal()">Close</button><button class="btn btn-primary" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.querySelector(\'#modal-body textarea\').value);toast(\'Prompt copied\',\'success\')">Copy prompt</button>');
+    const txt = [
+      'SCHOOL CONNECT CBT PRO — STRUCTURED QUESTION-BANK PROMPT (NO RUNTIME AI API)',
+      '',
+      'ROLE',
+      'Act as a senior examiner, curriculum specialist, psychometric reviewer and classroom teacher. Produce a clean CSV question bank that can be pasted directly into School Connect CBT.',
+      '',
+      'ASSESSMENT CONTEXT',
+      'School: [SCHOOL NAME]',
+      'Subject: [SUBJECT]',
+      'Class/Level: [CLASS]',
+      'Term/Session: [TERM] [SESSION]',
+      'Topic(s): [TOPICS]',
+      'Exam type: [Quiz / CA / Assignment / Project / Practical / Exam / Entrance]',
+      'Number of questions: [COUNT]',
+      'Duration: [MINUTES]',
+      'Learner standard: Nigerian curriculum plus international assessment best practice.',
+      '',
+      'OUTPUT FORMAT — CSV ONLY',
+      'Return CSV only. Do not add markdown, numbering, commentary, code fences, or explanations outside the CSV.',
+      'Use this exact header:',
+      'Question,A,B,C,D,CorrectAnswer,Explanation,Type,Tolerance,Unit,Accept,MRQ_AON,Pairs,Items,Difficulty,Tags,Section',
+      '',
+      'SUPPORTED TYPES',
+      'mcq, truefalse, numeric, short, mrq, essay, matching, ordering, cloze, categorization, multinumeric, assertion_reason, case_study, image_mcq, matrix, hot_text, code',
+      '',
+      'QUALITY RULES',
+      '1. Questions must be age-appropriate, unambiguous and syllabus-aligned.',
+      '2. Mix cognitive levels: recall, understanding, application, analysis and problem-solving.',
+      '3. Balance difficulty: 30% Easy, 50% Medium, 20% Hard.',
+      '4. Avoid repeated questions, duplicated answers and trick wording.',
+      '5. Every auto-gradable item must have a correct answer.',
+      '6. Every item must include a concise Explanation for teacher review and student feedback.',
+      '7. Use Tags for topic/subtopic and Section for paper section.',
+      '',
+      'TYPE RULES',
+      '- mcq: options A-D; CorrectAnswer must be A/B/C/D.',
+      '- truefalse: use A=True, B=False; CorrectAnswer A or B.',
+      '- mrq: CorrectAnswer like A|C. If MRQ_AON is TRUE, award all-or-nothing; otherwise partial credit is allowed.',
+      '- numeric: CorrectAnswer is a number; Tolerance may be 0.01 etc; Unit optional.',
+      '- short: CorrectAnswer is preferred text; Accept can contain alternatives separated by |.',
+      '- matching: put pairs in Pairs as left:right|left:right.',
+      '- ordering: put correct sequence in Items as JSON array or pipe list.',
+      '- cloze: use blanks like [blank1]; put answers in Items JSON.',
+      '- categorization/matrix/hot_text/code/case_study: use Items JSON, valid and compact.',
+      '- essay: CorrectAnswer may contain marking guide; not auto-graded.',
+      '',
+      'FINAL CHECK',
+      'Before returning, silently verify that the CSV has the exact header, all rows have the same number of columns, quotes are escaped properly, and no markdown is included.',
+      ''
+    ].join('\\n');
+    openModal('Structured CBT Question Prompt', '<textarea class="form-input" rows="18" style="font-family:monospace">'+esc(txt)+'</textarea><p style="color:var(--gray-600)">Copy this into any AI assistant manually, then paste the returned CSV into School Connect. The platform itself uses no AI API.</p>', '<button class="btn btn-outline" onclick="closeModal()">Close</button><button class="btn btn-primary" id="copy-cbt-prompt">Copy prompt</button>');
+    setTimeout(()=>{ const b=document.getElementById('copy-cbt-prompt'); if(b) b.onclick=()=>{ navigator.clipboard&&navigator.clipboard.writeText(document.querySelector('#modal-body textarea').value); toast('Prompt copied','success'); }; },0);
   },
+
   _readFile(ev){ const f=ev.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{document.getElementById('ex-csv').value=r.result;}; r.readAsText(f); },
   async save(){
     if(!sb){ toast('Database not configured.','warning'); return; }
@@ -2096,7 +2160,7 @@ const EN={ rows:[], exam:null,
   decision(r){ var pass=Number(document.getElementById('en-pass').value||50); return Number(r.percent)>=pass?'admitted':'not_admitted'; },
   slipHTML(r){ var sc=(window.SCHOOL||{}); var pass=Number(document.getElementById('en-pass').value||50); var ok=Number(r.percent)>=pass;
     return '<div style="width:700px;max-width:96vw;border:2px solid '+(sc.primary||'#4f46e5')+';padding:30px;font-family:Arial,sans-serif">'+
-      '<div style="text-align:center"><img src="assets/img/logo.'+(sc.logoExt||'svg')+'" style="width:60px;height:60px;object-fit:contain" onerror="this.style.display=\\'none\\'"><h2 style="margin:6px 0;color:'+(sc.primary||'#4f46e5')+'">'+esc(sc.name||'School')+'</h2><p style="margin:0;color:#64748b">'+esc(sc.motto||'')+'</p><h3 style="margin:14px 0">ASSESSMENT RESULT SLIP</h3></div>'+
+      '<div style="text-align:center"><img src="assets/img/logo.${cfg.logoExt || 'svg'}" style="width:60px;height:60px;object-fit:contain" onerror="this.style.display=\\'none\\'"><h2 style="margin:6px 0;color:'+(sc.primary||'#4f46e5')+'">'+esc(sc.name||'School')+'</h2><p style="margin:0;color:#64748b">'+esc(sc.motto||'')+'</p><h3 style="margin:14px 0">ASSESSMENT RESULT SLIP</h3></div>'+
       '<table style="width:100%;font-size:.95rem;line-height:1.9"><tr><td><b>Candidate:</b></td><td>'+esc(r.student_name)+'</td><td><b>Class:</b></td><td>'+esc(r.student_class||'-')+'</td></tr>'+
       '<tr><td><b>Assessment:</b></td><td colspan=3>'+esc((EN.exam&&EN.exam.title)||'')+'</td></tr>'+
       '<tr><td><b>Score:</b></td><td>'+r.score+' / '+r.total+'</td><td><b>Percentage:</b></td><td>'+Number(r.percent).toFixed(1)+'%</td></tr>'+
@@ -2105,7 +2169,7 @@ const EN={ rows:[], exam:null,
       '<p style="margin-top:18px;font-size:.75rem;color:#94a3b8">Ref: '+esc(r.cert_code||r.id.slice(0,8))+' · Generated '+new Date().toLocaleDateString()+'</p></div>'; },
   letterHTML(r){ var sc=(window.SCHOOL||{}); var ok=this.decision(r)==='admitted'; var ses=document.getElementById('en-session').value||'';
     return '<div style="width:720px;max-width:96vw;padding:40px;font-family:Georgia,serif;line-height:1.7">'+
-      '<div style="display:flex;align-items:center;gap:12px;border-bottom:3px solid '+(sc.primary||'#4f46e5')+';padding-bottom:10px"><img src="assets/img/logo.'+(sc.logoExt||'svg')+'" style="width:56px;height:56px;object-fit:contain" onerror="this.style.display=\\'none\\'"><div><h2 style="margin:0;color:'+(sc.primary||'#4f46e5')+'">'+esc(sc.name||'School')+'</h2><div style="font-size:.8rem;color:#64748b">'+esc(sc.address||'')+' · '+esc(sc.phone||'')+' · '+esc(sc.email||'')+'</div></div></div>'+
+      '<div style="display:flex;align-items:center;gap:12px;border-bottom:3px solid '+(sc.primary||'#4f46e5')+';padding-bottom:10px"><img src="assets/img/logo.${cfg.logoExt || 'svg'}" style="width:56px;height:56px;object-fit:contain" onerror="this.style.display=\\'none\\'"><div><h2 style="margin:0;color:'+(sc.primary||'#4f46e5')+'">'+esc(sc.name||'School')+'</h2><div style="font-size:.8rem;color:#64748b">'+esc(sc.address||'')+' · '+esc(sc.phone||'')+' · '+esc(sc.email||'')+'</div></div></div>'+
       '<p style="text-align:right;margin:16px 0 0">'+new Date().toLocaleDateString()+'</p>'+
       '<p style="margin:6px 0"><b>'+esc(r.student_name)+'</b></p>'+
       '<h3 style="text-align:center;text-decoration:underline;margin:18px 0">'+(ok?'LETTER OF ADMISSION':'NOTIFICATION OF ASSESSMENT OUTCOME')+'</h3>'+
@@ -2234,6 +2298,40 @@ const AR={ rows:[],
 };
 </script></body></html>`);
   },
+  /* Simple public contact page for generated school sites */
+  pageContact(cfg) {
+    return `${T.head(cfg, 'Contact')}${T.bellAndBanner(cfg)}${T.modal()}
+<div style="min-height:100vh;background:var(--gray-100);padding:32px">
+  <main class="card" style="max-width:760px;margin:0 auto;padding:28px">
+    <h1 style="margin-top:0">Contact ${T.esc(cfg.schoolName)}</h1>
+    <p><strong>Address:</strong> ${T.esc(cfg.address || '')}</p>
+    <p><strong>Phone:</strong> <a href="tel:${T.esc(cfg.phone || '')}">${T.esc(cfg.phone || '')}</a></p>
+    <p><strong>Email:</strong> <a href="mailto:${T.esc(cfg.email || '')}">${T.esc(cfg.email || '')}</a></p>
+    <p><a class="btn btn-primary" href="login.html">Sign in</a> <a class="btn btn-outline" href="apply.html">Apply</a> <a class="btn btn-outline" href="index.html">Back home</a></p>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/notifications.js"></script>
+<script src="assets/js/pwa-install.js"></script>
+<script src="assets/js/site-help.js"></script>
+<script src="assets/js/super.js"></script>
+<script src="assets/js/enterprise.js"></script>
+<script src="assets/js/crud.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+if (window.Notifications) {
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').then(reg => Notifications.init(sb, reg));
+  else Notifications.init(sb);
+}
+if (window.PWAInstall) PWAInstall.init();
+if (window.Super) Super.init(sb, window.SCHOOL);
+if (window.Enterprise) Enterprise.init(sb);
+if (window.CRUD) CRUD.init(sb);
+</script>
+</body></html>`;
+  },
+
 
   /* ====================================================================
      UPDATE V2 — DEVELOPER / BRAND BIO (issue 4)

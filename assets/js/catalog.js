@@ -151,14 +151,14 @@ const FONTS = [
   { id:'montserrat', name:'Montserrat', css:'Montserrat:wght@300;400;500;600;700', family:'Montserrat' },
   { id:'oswald', name:'Oswald', css:'Oswald:wght@300;400;500;600;700', family:'Oswald' },
   { id:'sourcesanspro', name:'Source Sans Pro', css:'Source+Sans+Pro:wght@300;400;500;600;700', family:'Source Sans Pro' },
-  { id:'slabo27px', name:'Slabo 27px', css:'Slabo+27px:wght@300;400;500;600;700', family:'Slabo 27px' },
+  { id:'slabo27px', name:'Slabo 27px', css:'Slabo+27px', family:'Slabo 27px' },
   { id:'raleway', name:'Raleway', css:'Raleway:wght@300;400;500;600;700', family:'Raleway' },
   { id:'ptsans', name:'PT Sans', css:'PT+Sans:wght@300;400;500;600;700', family:'PT Sans' },
   { id:'merriweather', name:'Merriweather', css:'Merriweather:wght@300;400;500;600;700', family:'Merriweather' },
   { id:'notosans', name:'Noto Sans', css:'Noto+Sans:wght@300;400;500;600;700', family:'Noto Sans' },
   { id:'nunito', name:'Nunito', css:'Nunito:wght@300;400;500;600;700', family:'Nunito' },
-  { id:'concertone', name:'Concert One', css:'Concert+One:wght@300;400;500;600;700', family:'Concert One' },
-  { id:'promt', name:'Promt', css:'Promt:wght@300;400;500;600;700', family:'Promt' },
+  { id:'concertone', name:'Concert One', css:'Concert+One', family:'Concert One' },
+  { id:'prompt', name:'Prompt', css:'Prompt:wght@300;400;500;600;700', family:'Prompt' },
   { id:'worksans', name:'Work Sans', css:'Work+Sans:wght@300;400;500;600;700', family:'Work Sans' },
   { id:'firasans', name:'Fira Sans', css:'Fira+Sans:wght@300;400;500;600;700', family:'Fira Sans' },
   { id:'quicksand', name:'Quicksand', css:'Quicksand:wght@300;400;500;600;700', family:'Quicksand' },
@@ -168,7 +168,7 @@ const FONTS = [
   { id:'josefinsans', name:'Josefin Sans', css:'Josefin+Sans:wght@300;400;500;600;700', family:'Josefin Sans' },
   { id:'cabin', name:'Cabin', css:'Cabin:wght@300;400;500;600;700', family:'Cabin' },
   { id:'oxygen', name:'Oxygen', css:'Oxygen:wght@300;400;500;600;700', family:'Oxygen' },
-  { id:'anton', name:'Anton', css:'Anton:wght@300;400;500;600;700', family:'Anton' },
+  { id:'anton', name:'Anton', css:'Anton', family:'Anton' },
   { id:'titilliumweb', name:'Titillium Web', css:'Titillium+Web:wght@300;400;500;600;700', family:'Titillium Web' },
   { id:'asap', name:'Asap', css:'Asap:wght@300;400;500;600;700', family:'Asap' },
   { id:'karla', name:'Karla', css:'Karla:wght@300;400;500;600;700', family:'Karla' },
@@ -183,9 +183,9 @@ const FONTS = [
   { id:'zillaslab', name:'Zilla Slab', css:'Zilla+Slab:wght@300;400;500;600;700', family:'Zilla Slab' },
   { id:'play', name:'Play', css:'Play:wght@300;400;500;600;700', family:'Play' },
   { id:'signika', name:'Signika', css:'Signika:wght@300;400;500;600;700', family:'Signika' },
-  { id:'righteous', name:'Righteous', css:'Righteous:wght@300;400;500;600;700', family:'Righteous' },
+  { id:'righteous', name:'Righteous', css:'Righteous', family:'Righteous' },
   { id:'overpass', name:'Overpass', css:'Overpass:wght@300;400;500;600;700', family:'Overpass' },
-  { id:'fjallaone', name:'Fjalla One', css:'Fjalla+One:wght@300;400;500;600;700', family:'Fjalla One' }
+  { id:'fjallaone', name:'Fjalla One', css:'Fjalla+One', family:'Fjalla One' }
 ];
 
 /* ---------- 3 Layouts ---------- */
