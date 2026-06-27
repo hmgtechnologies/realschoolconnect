@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /builder.html
 
-Sitemap: https://hmgtechnologies.github.io/schoolconnectv2/sitemap.xml
+Sitemap: https://hmgtechnologies.github.io/realschoolconnect/sitemap.xml
 
 # Optimized for SEO lead-generation.
 # Each generated school site ships its own robots.txt + sitemap.xml,

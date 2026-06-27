@@ -1,13 +1,13 @@
 // School Connect — Service Worker (Gen v7)
 // Provides: offline-first cache, push notifications, notification click handling.
-const CACHE = 'sc-cache-v7';
+const CACHE = 'sc-cache-2026-06-27-r2';
 const CORE = [
   './', './index.html', './builder.html', './voting.html', './notifications.html',
   './install.html', './ecosystem.html', './about.html', './guide.html',
   './assets/css/style.css',
   './assets/js/config.js', './assets/js/catalog.js',
   './assets/js/notifications.js', './assets/js/voting.js', './assets/js/pwa-install.js',
-  './assets/js/chatbot.js', './assets/js/wizard.js', './assets/js/generator.js', './assets/js/templates.js',
+  './assets/js/chatbot.js', './assets/js/wizard.js', './assets/js/generator.js', './assets/js/templates.js', './assets/js/site-help.js',
   './assets/img/logo.svg', './assets/img/favicon.svg', './manifest.json'
 ];
 

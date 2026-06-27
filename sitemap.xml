@@ -4,25 +4,25 @@
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
 
   <url>
-    <loc>https://hmgtechnologies.github.io/schoolconnectv2/</loc>
+    <loc>https://hmgtechnologies.github.io/realschoolconnect/</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://hmgtechnologies.github.io/schoolconnectv2/assets/img/og-cover.svg</image:loc>
+      <image:loc>https://hmgtechnologies.github.io/realschoolconnect/assets/img/og-cover.svg</image:loc>
       <image:title>School Connect — Free School Management Platform</image:title>
     </image:image>
   </url>
 
-  <url><loc>https://hmgtechnologies.github.io/schoolconnectv2/voting.html</loc><lastmod>2026-06-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://hmgtechnologies.github.io/schoolconnectv2/notifications.html</loc><lastmod>2026-06-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://hmgtechnologies.github.io/schoolconnectv2/install.html</loc><lastmod>2026-06-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://hmgtechnologies.github.io/schoolconnectv2/ecosystem.html</loc><lastmod>2026-06-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://hmgtechnologies.github.io/schoolconnectv2/about.html</loc><lastmod>2026-06-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://hmgtechnologies.github.io/schoolconnectv2/guide.html</loc><lastmod>2026-06-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://hmgtechnologies.github.io/schoolconnectv2/suite.html</loc><lastmod>2026-06-24</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://hmgtechnologies.github.io/schoolconnectv2/projects.html</loc><lastmod>2026-06-24</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://hmgtechnologies.github.io/schoolconnectv2/flyer.html</loc><lastmod>2026-06-24</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://hmgtechnologies.github.io/realschoolconnect/voting.html</loc><lastmod>2026-06-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://hmgtechnologies.github.io/realschoolconnect/notifications.html</loc><lastmod>2026-06-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://hmgtechnologies.github.io/realschoolconnect/install.html</loc><lastmod>2026-06-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://hmgtechnologies.github.io/realschoolconnect/ecosystem.html</loc><lastmod>2026-06-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://hmgtechnologies.github.io/realschoolconnect/about.html</loc><lastmod>2026-06-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hmgtechnologies.github.io/realschoolconnect/guide.html</loc><lastmod>2026-06-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hmgtechnologies.github.io/realschoolconnect/suite.html</loc><lastmod>2026-06-24</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://hmgtechnologies.github.io/realschoolconnect/projects.html</loc><lastmod>2026-06-24</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://hmgtechnologies.github.io/realschoolconnect/flyer.html</loc><lastmod>2026-06-24</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 
   <!-- HMG Ecosystem (lead generation) -->
   <url><loc>https://hmgconcepts.pages.dev/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
